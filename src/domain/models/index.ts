@@ -1,2 +1,2 @@
 export * from './access-token'
-export * from './facebbok-account'
+export * from './facebook-account'
