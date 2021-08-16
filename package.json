@@ -31,10 +31,12 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "axios": "^0.21.1",
     "module-alias": "^2.2.2",
     "rimraf": "^3.0.2"
   },
   "devDependencies": {
+    "@types/axios": "^0.14.0",
     "@types/jest": "^26.0.24",
     "@types/module-alias": "^2.0.0",
     "@types/node": "^16.0.1",
