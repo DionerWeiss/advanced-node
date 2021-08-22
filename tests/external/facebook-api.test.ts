@@ -3,15 +3,20 @@ import { AxiosHttpClient } from '@/infra/http'
 import { env } from '@/main/config/env'
 
 describe('Facebook Api Integration Tests', () => {
-  it('should return a Facebook User if token is valid', async () => {
-    const axiosClient = new AxiosHttpClient()
-    const sut = new FacebookApi(
+  let axiosClient: AxiosHttpClient
+  let sut: FacebookApi
+
+  beforeEach(() => {
+    axiosClient = new AxiosHttpClient()
+    sut = new FacebookApi(
       axiosClient,
       env.facebookApi.clientId,
       env.facebookApi.clientSecret
     )
+  })
 
-    const fbUser = await sut.loadUser({ token: 'EAAD6DuQj45EBAJAS2kF7SwoCZBPCFCUNf3FDaBfHfQSUEiJf8XZASRyOBuStEOImhxl9POYRFinhxGGLxNPB3vTLn4OTjAIvUusnPwyzxOZCRydo5wQCIRZB0wfdD2P3rUJduDW8zNlZAhLaQBd0sMrCG2laddn1l0rUzSw879iCd1vZB6MZCn9dRHR13sciIVRZCHY7bepKkxe80FmiqhJ2' })
+  it('should return a Facebook User if token is valid', async () => {
+    const fbUser = await sut.loadUser({ token: env.facebookApi.token })
     expect(fbUser).toEqual({
       facebookId: '102059075537688',
       email: 'eymehrenbs_1629658496@tfbnw.net',
@@ -20,13 +25,6 @@ describe('Facebook Api Integration Tests', () => {
   })
 
   it('should return undefined if token is invalid', async () => {
-    const axiosClient = new AxiosHttpClient()
-    const sut = new FacebookApi(
-      axiosClient,
-      env.facebookApi.clientId,
-      env.facebookApi.clientSecret
-    )
-
     const fbUser = await sut.loadUser({ token: 'invalid' })
     expect(fbUser).toBeUndefined()
   })
