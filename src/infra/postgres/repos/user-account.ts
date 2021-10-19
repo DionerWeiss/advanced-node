@@ -3,10 +3,10 @@ import { PgUser } from '@/infra/postgres/entities'
 
 import { getRepository } from 'typeorm'
 
-type LoadParams = LoadUserAccount.Params
-type LoadResult = LoadUserAccount.Result
-type SaveParams = SaveFacebookAccount.Params
-type SaveResult = SaveFacebookAccount.Result
+type LoadParams = LoadUserAccount.Input
+type LoadResult = LoadUserAccount.Output
+type SaveParams = SaveFacebookAccount.Input
+type SaveResult = SaveFacebookAccount.Output
 
 export class PgUserAccountRepository implements LoadUserAccount, SaveFacebookAccount {
   async load ({ email }: LoadParams): Promise<LoadResult> {
