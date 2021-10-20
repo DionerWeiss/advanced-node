@@ -18,6 +18,7 @@ describe('ChangeProfilePicture', () => {
     fileStorage.upload.mockResolvedValue('any_url')
     crypto = mock()
     userProfileRepo = mock()
+    userProfileRepo.load.mockResolvedValue({ name: 'Dioner Weiss' })
     crypto.uuid.mockReturnValue(uuid)
   })
 
@@ -48,8 +49,50 @@ describe('ChangeProfilePicture', () => {
   it('should call SaveUserPicture with correct input when file is undefined', async () => {
     await sut({ id: 'any_id', file: undefined })
 
-    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: undefined })
+    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: undefined, initials: 'DW' })
     expect(userProfileRepo.savePicture).toBeCalledTimes(1)
+  })
+
+  it('should call SaveUserPicture with uppercase', async () => {
+    userProfileRepo.load.mockResolvedValueOnce({ name: 'dioner weiss' })
+
+    await sut({ id: 'any_id', file: undefined })
+
+    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: undefined, initials: 'DW' })
+    expect(userProfileRepo.savePicture).toBeCalledTimes(1)
+  })
+
+  it('should call SaveUserPicture with first name', async () => {
+    userProfileRepo.load.mockResolvedValueOnce({ name: 'Dioner' })
+
+    await sut({ id: 'any_id', file: undefined })
+
+    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: undefined, initials: 'DI' })
+    expect(userProfileRepo.savePicture).toBeCalledTimes(1)
+  })
+
+  it('should call SaveUserPicture with first letter', async () => {
+    userProfileRepo.load.mockResolvedValueOnce({ name: 'D' })
+
+    await sut({ id: 'any_id', file: undefined })
+
+    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: undefined, initials: 'D' })
+    expect(userProfileRepo.savePicture).toBeCalledTimes(1)
+  })
+
+  it('should call SaveUserPicture with correct input when file is undefined', async () => {
+    userProfileRepo.load.mockResolvedValueOnce({ name: undefined })
+    await sut({ id: 'any_id', file: undefined })
+
+    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: undefined, initials: undefined })
+    expect(userProfileRepo.savePicture).toBeCalledTimes(1)
+  })
+
+  it('should call LoadUserProfile with correct input ', async () => {
+    await sut({ id: 'any_id', file: undefined })
+
+    expect(userProfileRepo.load).toBeCalledWith({ id: 'any_id' })
+    expect(userProfileRepo.load).toBeCalledTimes(1)
   })
 
   it('should call LoadUserProfile if file exists', async () => {
