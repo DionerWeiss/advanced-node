@@ -1,7 +1,11 @@
 import { UploadFile, UUIDGenerator } from '@/domain/contracts/gateways'
 import { LoadUserProfile, SaveUserPicture } from '@/domain/contracts/repos'
+import { UserProfile } from '@/domain/entities'
 import { ChangeProfilePicture, setupChangeProfilePicture } from '@/domain/use-cases/change-profile-picture'
 import { mock, MockProxy } from 'jest-mock-extended'
+import { mocked } from 'ts-jest/utils'
+
+jest.mock('@/domain/entities/user-profile')
 
 describe('ChangeProfilePicture', () => {
   let uuid: string
@@ -42,49 +46,7 @@ describe('ChangeProfilePicture', () => {
   it('should call SaveUserPicture with correct input', async () => {
     await sut({ id: 'any_id', file })
 
-    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: 'any_url', initial: undefined })
-    expect(userProfileRepo.savePicture).toBeCalledTimes(1)
-  })
-
-  it('should call SaveUserPicture with correct input when file is undefined', async () => {
-    await sut({ id: 'any_id', file: undefined })
-
-    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: undefined, initials: 'DW' })
-    expect(userProfileRepo.savePicture).toBeCalledTimes(1)
-  })
-
-  it('should call SaveUserPicture with uppercase', async () => {
-    userProfileRepo.load.mockResolvedValueOnce({ name: 'dioner weiss' })
-
-    await sut({ id: 'any_id', file: undefined })
-
-    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: undefined, initials: 'DW' })
-    expect(userProfileRepo.savePicture).toBeCalledTimes(1)
-  })
-
-  it('should call SaveUserPicture with first name', async () => {
-    userProfileRepo.load.mockResolvedValueOnce({ name: 'Dioner' })
-
-    await sut({ id: 'any_id', file: undefined })
-
-    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: undefined, initials: 'DI' })
-    expect(userProfileRepo.savePicture).toBeCalledTimes(1)
-  })
-
-  it('should call SaveUserPicture with first letter', async () => {
-    userProfileRepo.load.mockResolvedValueOnce({ name: 'D' })
-
-    await sut({ id: 'any_id', file: undefined })
-
-    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: undefined, initials: 'D' })
-    expect(userProfileRepo.savePicture).toBeCalledTimes(1)
-  })
-
-  it('should call SaveUserPicture with correct input when file is undefined', async () => {
-    userProfileRepo.load.mockResolvedValueOnce({ name: undefined })
-    await sut({ id: 'any_id', file: undefined })
-
-    expect(userProfileRepo.savePicture).toBeCalledWith({ pictureUrl: undefined, initials: undefined })
+    expect(userProfileRepo.savePicture).toBeCalledWith(...mocked(UserProfile).mock.instances)
     expect(userProfileRepo.savePicture).toBeCalledTimes(1)
   })
 
