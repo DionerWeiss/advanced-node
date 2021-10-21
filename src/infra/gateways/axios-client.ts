@@ -1,4 +1,4 @@
-import { HttpGetClient } from '@/infra/http/client'
+import { HttpGetClient } from '@/infra/gateways'
 import axios from 'axios'
 
 export class AxiosHttpClient implements HttpGetClient {
