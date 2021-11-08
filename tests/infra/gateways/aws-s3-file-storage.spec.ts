@@ -88,9 +88,7 @@ describe('AwsS3FileStorage', () => {
     beforeAll(() => {
       deleteObjectPromiseSpy = jest.fn()
       deleteObjectSpy = jest.fn().mockImplementation(() => ({ promise: deleteObjectPromiseSpy }))
-      mocked(S3).mockImplementation(jest.fn().mockImplementation(() => ({
-        deleteObject: deleteObjectSpy
-      })))
+      mocked(S3).mockImplementation(jest.fn().mockImplementation(() => ({ deleteObject: deleteObjectSpy })))
     })
 
     it('should call deleteObject with correct input', async () => {
@@ -102,6 +100,15 @@ describe('AwsS3FileStorage', () => {
       })
       expect(deleteObjectSpy).toHaveBeenCalledTimes(1)
       expect(deleteObjectPromiseSpy).toHaveBeenCalledTimes(1)
+    })
+
+    it('should rethrow if deleteObject throws', async () => {
+      const error = new Error('delete_error')
+      deleteObjectPromiseSpy.mockRejectedValueOnce(error)
+
+      const promise = sut.delete({ key })
+
+      await expect(promise).rejects.toThrow(error)
     })
   })
 })
