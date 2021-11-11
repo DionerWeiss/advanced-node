@@ -3,16 +3,16 @@ import { AllowedMimeTypes, MaxFileSize, Required, RequiredBuffer } from '@/appli
 
 describe('SavePictureController', () => {
   let buffer: Buffer
-  let mimetype: string
-  let file: { buffer: Buffer, mimetype: string }
+  let mimeType: string
+  let file: { buffer: Buffer, mimeType: string }
   let userId: string
   let sut: SavePictureController
   let changeProfilePicture: jest.Mock
 
   beforeAll(() => {
     buffer = Buffer.from('any_buffer')
-    mimetype = 'image/png'
-    file = { buffer, mimetype }
+    mimeType = 'image/png'
+    file = { buffer, mimeType }
     userId = 'any_user_id'
     changeProfilePicture = jest.fn().mockResolvedValue({ initials: 'any_initials', pictureUrl: 'any_url' })
   })
@@ -31,7 +31,7 @@ describe('SavePictureController', () => {
     expect(validators).toEqual([
       new Required(file, 'file'),
       new RequiredBuffer(buffer, 'file'),
-      new AllowedMimeTypes(['png', 'jpg'], mimetype),
+      new AllowedMimeTypes(['png', 'jpg'], mimeType),
       new MaxFileSize(5, buffer)
     ])
   })
