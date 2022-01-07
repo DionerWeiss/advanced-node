@@ -70,7 +70,6 @@
     "eslint-plugin-promise": "^4.3.1",
     "husky": "^7.0.4",
     "jest": "^27.4.7",
-    "jest-mock": "^27.4.6",
     "jest-mock-extended": "^2.0.4",
     "lint-staged": "^12.1.5",
     "mockdate": "^3.0.5",

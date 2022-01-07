@@ -1,6 +1,5 @@
 import { AwsS3FileStorage } from '@/infra/gateways'
 import { config, S3 } from 'aws-sdk'
-import { mocked } from 'ts-jest/utils'
 
 jest.mock('aws-sdk')
 
@@ -42,7 +41,7 @@ describe('AwsS3FileStorage', () => {
       file = Buffer.from('any_buffer')
       putObjectPromiseSpy = jest.fn()
       putObjectSpy = jest.fn().mockImplementation(() => ({ promise: putObjectPromiseSpy }))
-      mocked(S3).mockImplementation(jest.fn().mockImplementation(() => ({
+      jest.mocked(S3).mockImplementation(jest.fn().mockImplementation(() => ({
         putObject: putObjectSpy
       })))
     })
@@ -88,7 +87,7 @@ describe('AwsS3FileStorage', () => {
     beforeAll(() => {
       deleteObjectPromiseSpy = jest.fn()
       deleteObjectSpy = jest.fn().mockImplementation(() => ({ promise: deleteObjectPromiseSpy }))
-      mocked(S3).mockImplementation(jest.fn().mockImplementation(() => ({ deleteObject: deleteObjectSpy })))
+      jest.mocked(S3).mockImplementation(jest.fn().mockImplementation(() => ({ deleteObject: deleteObjectSpy })))
     })
 
     it('should call deleteObject with correct input', async () => {
