@@ -4,12 +4,13 @@ import { UnauthorizedError } from '@/application/errors'
 import { makeFakeDb } from '@/tests/infra/repos/postgress/mocks'
 
 import { IBackup } from 'pg-mem'
-import { getConnection } from 'typeorm'
 import request from 'supertest'
+import { PgConnection } from '@/infra/repos/postgres/helpers'
 
 describe('Login Routes', () => {
   describe('POST /login/facebook', () => {
     let backup: IBackup
+    let connection: PgConnection
     const loadUserSPy = jest.fn()
 
     jest.mock('@/infra/gateways/facebook-api', () => ({
@@ -19,6 +20,7 @@ describe('Login Routes', () => {
     }))
 
     beforeAll(async () => {
+      connection = PgConnection.getInstance()
       const db = await makeFakeDb([PgUser])
       backup = db.backup()
     })
@@ -28,7 +30,7 @@ describe('Login Routes', () => {
     })
 
     afterAll(async () => {
-      await getConnection().close()
+      await connection.disconnect()
     })
 
     it('should return 200 with AccessToken', async () => {
